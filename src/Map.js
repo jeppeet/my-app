@@ -8,20 +8,15 @@ const parseCoordinates = (coordinates) => {
   return coordinates.map(coord => [parseFloat(coord.Lat), parseFloat(coord.Lon)]);
 };
 
-// Function to calculate the bounding box of a polygon
+// Function to calculate the bounds of a polygon
 const calculatePolygonBounds = (coordinates) => {
   return L.latLngBounds(coordinates);
 };
 
-// Function to calculate the bounding box of a circle manually
+// Function to calculate the bounds of a circle
 const calculateCircleBounds = (center, radius) => {
-  const lat = center[0];
-  const lon = center[1];
-  const radiusInDegrees = radius / 111; // Rough conversion of km to degrees
-  return L.latLngBounds([
-    [lat - radiusInDegrees, lon - radiusInDegrees],
-    [lat + radiusInDegrees, lon + radiusInDegrees],
-  ]);
+  const circle = L.circle(center, { radius: radius * 1000 }); // Radius in meters
+  return circle.getBounds();
 };
 
 // Function to aggregate bounds
@@ -57,10 +52,10 @@ const Map = ({ shapes }) => {
   const mapBounds = aggregateBounds(boundsArray);
 
   return (
-    <MapContainer bounds={mapBounds} style={{ height: '80vh', width: '50%' }}>
+    <MapContainer bounds={mapBounds} style={{ height: '100vh', width: '100%' }}>
       <TileLayer
-        url='https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png'
-        attribution='&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       {shapes.map((shape, index) => {
         if (shape.Type === "cirkle") {
@@ -78,33 +73,7 @@ const Map = ({ shapes }) => {
   );
 };
 
-// Example usage
-const shapes = [
-  /* { Type: "cirkle", Coordinates: [{ Lat: "61.4242", Lon: "11.3243" }], Radius: 500 },
-  { Type: "cirkle", Coordinates: [{ Lat: "59.911491", Lon: "10.757933" }], Radius: 100 }, */
-  { Type: "polygon", Coordinates: [
-      { Lat: "60.3913", Lon: "5.3221" },
-      { Lat: "60.3935", Lon: "5.3245" },
-      { Lat: "60.3947", Lon: "5.3199" }
-    ], Radius: null },/*
-  { Type: "cirkle", Coordinates: [{ Lat: "63.4305", Lon: "10.3951" }], Radius: 200 },*/
-  { Type: "polygon", Coordinates: [
-      { Lat: "58.9690", Lon: "5.7331" },
-      { Lat: "58.9714", Lon: "5.7355" },
-      { Lat: "58.9730", Lon: "5.7283" }
-    ], Radius: null } 
-];
 
-const App = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Map with Shapes</h1>
-        <p>This map shows circles and polygons with calculated centers.</p>
-      </header>
-      <Map shapes={shapes} />
-    </div>
-  );
-};
 
-export default App;
+
+export default Map;
