@@ -1,0 +1,33 @@
+{
+    "areas": [
+      {
+        "Type": "cirkle",
+        "Coordinates": [{"Lat": "61.4242", "Lon": "11.3243"}],
+        "Radius": 0.500
+      },
+      {
+        "Type": "polygon",
+        "Coordinates": [
+          {"Lat": "61.4242", "Lon": "11.3243"},
+          {"Lat": "60.4242", "Lon": "12.3243"},
+          {"Lat": "62.4242", "Lon": "13.3243"}
+        ],
+        "Radius": null
+      },
+      {
+        "Type": "cirkle",
+        "Coordinates": [{"Lat": "62.4242", "Lon": "14.3243"}],
+        "Radius": 1.000
+      },
+      {
+        "Type": "polygon",
+        "Coordinates": [
+          {"Lat": "60.4242", "Lon": "10.3243"},
+          {"Lat": "61.4242", "Lon": "11.3243"},
+          {"Lat": "61.5242", "Lon": "12.3243"}
+        ],
+        "Radius": null
+      }
+    ]
+  }
+  
