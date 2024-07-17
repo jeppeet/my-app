@@ -8,15 +8,20 @@ const parseCoordinates = (coordinates) => {
   return coordinates.map(coord => [parseFloat(coord.Lat), parseFloat(coord.Lon)]);
 };
 
-// Function to calculate the bounds of a polygon
+// Function to calculate the bounding box of a polygon
 const calculatePolygonBounds = (coordinates) => {
   return L.latLngBounds(coordinates);
 };
 
-// Function to calculate the bounds of a circle
+// Function to calculate the bounding box of a circle manually
 const calculateCircleBounds = (center, radius) => {
-  const circle = L.circle(center, { radius: radius * 1000 }); // Radius in meters
-  return circle.getBounds();
+  const lat = center[0];
+  const lon = center[1];
+  const radiusInDegrees = radius / 111; // Rough conversion of km to degrees
+  return L.latLngBounds([
+    [lat - radiusInDegrees, lon - radiusInDegrees],
+    [lat + radiusInDegrees, lon + radiusInDegrees],
+  ]);
 };
 
 // Function to aggregate bounds
@@ -52,19 +57,19 @@ const Map = ({ shapes }) => {
   const mapBounds = aggregateBounds(boundsArray);
 
   return (
-    <MapContainer bounds={mapBounds} style={{ height: '100vh', width: '100%' }}>
+    <MapContainer bounds={mapBounds} style={{ height: '80vh', width: '50%' }}>
       <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url='https://cache.kartverket.no/v1/wmts/1.0.0/topo/default/webmercator/{z}/{y}/{x}.png'
+        attribution='&copy; <a href="http://www.kartverket.no/">Kartverket</a>'
       />
       {shapes.map((shape, index) => {
         if (shape.Type === "cirkle") {
           const center = parseCoordinates(shape.Coordinates)[0];
           const radius = shape.Radius * 1000; // Radius in meters
-          return <Circle key={index} center={center} radius={radius} color="blue" />;
+          return <Circle key={index} center={center} radius={radius} color="red" />;
         } else if (shape.Type === "polygon") {
           const polygonCoordinates = parseCoordinates(shape.Coordinates);
-          return <Polygon key={index} positions={polygonCoordinates} color="purple" />;
+          return <Polygon key={index} positions={polygonCoordinates} color="red" />;
         }
         return null;
       })}
@@ -72,8 +77,5 @@ const Map = ({ shapes }) => {
     </MapContainer>
   );
 };
-
-
-
 
 export default Map;
